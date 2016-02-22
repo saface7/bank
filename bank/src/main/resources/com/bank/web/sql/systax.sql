@@ -1,0 +1,15 @@
+--sql에는 4개의 종류가 있음
+--1. ddl(DEFINITION) : CAD
+--2. dml(manipulation) : DRUD
+--3. dcl(control)
+--4. TCL(TX control)
+
+--ddl
+--create
+--alter
+--drop
+--dml
+--c:insert   자료추가
+--r:select   자료검색
+--u:update   자료수정
+--d:delete   자료삭제

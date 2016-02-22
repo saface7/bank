@@ -19,10 +19,10 @@ public class OracleTest {
 					Constants.ORACLE_PASS
 					);
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM test");
+			rs = stmt.executeQuery("SELECT * FROM emp");
 			String name = null;
 			while (rs.next()) {
-				name = rs.getString("name");
+				name = rs.getString("email");
 			}
 			System.out.println("이름 :" + name);
 		} catch (Exception e) {
