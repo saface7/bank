@@ -5,29 +5,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.bank.web.domain.MemberBean;
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bank.web.domain.MemberVO;
+import com.bank.web.mapper.MemberMapper;
 import com.bank.web.service.MemberService;
-
+@Service
 public class MemberServiceImpl implements MemberService {
-	MemberBean[] members = new MemberBean[100];
+	MemberVO[] members = new MemberVO[100];
 	// 필드
-	private MemberBean member;
-	private MemberBean[] memberList;
-	private Map<String, MemberBean> map;
-
+	@Autowired MemberVO member;
+	private MemberVO[] memberList;
+	private Map<String, MemberVO> map;
+//	@Autowired MemberMapper mapper;
+	@Autowired private SqlSession sqlSession;
 	public MemberServiceImpl() {
 		// 생성자
-		member = new MemberBean();
+		//member = new MemberVO();
 		// memberList = new MemberBean[];
-		map = new HashMap<String, MemberBean>();
+		map = new HashMap<String, MemberVO>();
 	}
 
 	public void AdminServiceImpl() {
 		//
-		members = new MemberBean[100];
+		members = new MemberVO[100];
 	}
 
-	public String join(MemberBean member) {
+	public String join(MemberVO member) {
 		// 회원가입
 		map.put(member.getUserid(), member);
 
@@ -35,15 +41,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public MemberBean searchById(String id) {
+	public MemberVO searchById(String id) {
 		// 아이디로 회원정보 검색
 		return map.get(id);
 	}
 
 	@Override
-	public List<MemberBean> searchByName(String name) {
+	public List<MemberVO> searchByName(String name) {
 		// 이름으로 회원정보 검색
-		List<MemberBean> temp = new ArrayList<MemberBean>();
+		List<MemberVO> temp = new ArrayList<MemberVO>();
 		for (String id : map.keySet()) {
 			if (map.get(id).getName().equals(name)) {
 				temp.add(map.get(id));
@@ -85,12 +91,14 @@ public class MemberServiceImpl implements MemberService {
 
 	// 에어리어
 	@Override
-	public String login(String id, String pass) {
+	public MemberVO login(MemberVO member) {
 		// 로그인
-		String result = "";
-		if (map.containsKey(id)) {
+		MemberMapper mapper = sqlSession.getMapper(MemberMapper.class);
+		member = mapper.selectMember(member);
+		//String result = "로그인 실패";
+/*		if (map.containsKey(id)) {
 			result = (map.get(id)).getPassword().equals(pass) ? "로그인 성공" : "로그인 실패";
-		}
+		}*/
 		// 메소드 체인 기법
 		/*
 		 * if (map.containsKey(id)) { // 맵에 id가 존재하는지를 먼저 체크한다.
@@ -99,11 +107,11 @@ public class MemberServiceImpl implements MemberService {
 		 * }else{ result = "비밀번호가 일치하지 않습니다"; } } else { result =
 		 * "아이디가 존재하지 않거나, 잘못된 아이디 입니다"; }
 		 */
-		return result;
+		return member;
 	}
 
 	@Override
-	public String update(MemberBean member) {
+	public String update(MemberVO member) {
 		// 정보수정
 		map.replace(member.getUserid(), member);
 		// String result = "업데이트 실패";

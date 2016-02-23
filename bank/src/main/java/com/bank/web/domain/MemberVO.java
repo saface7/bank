@@ -1,6 +1,9 @@
 package com.bank.web.domain;
 
-public class MemberBean {
+import org.springframework.stereotype.Component;
+
+@Component
+public class MemberVO {
 	private String userid;
 	private String name;
 	private String password;

@@ -59,6 +59,7 @@ from employees;
 
 select *
 from  employees;
+
 select * from emp;
 
 create or replace view job as
