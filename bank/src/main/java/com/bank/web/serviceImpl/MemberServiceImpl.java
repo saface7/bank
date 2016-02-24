@@ -21,6 +21,9 @@ public class MemberServiceImpl implements MemberService {
 	private Map<String, MemberVO> map;
 //	@Autowired MemberMapper mapper;
 	@Autowired private SqlSession sqlSession;
+	
+
+	
 	public MemberServiceImpl() {
 		// 생성자
 		//member = new MemberVO();
@@ -29,15 +32,13 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	public void AdminServiceImpl() {
-		//
-		members = new MemberVO[100];
+		
 	}
 
-	public String join(MemberVO member) {
+	public int join(MemberVO member) {
 		// 회원가입
-		map.put(member.getUserid(), member);
-
-		return member.getName() + "회원가입을 축하드립니다";
+		MemberMapper mapper = sqlSession.getMapper(MemberMapper.class);
+		return mapper.insertMember(member);
 	}
 
 	@Override
@@ -93,8 +94,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public MemberVO login(MemberVO member) {
 		// 로그인
+		System.out.println("서비스 진입아이디 : "+member.getUserid());
+		System.out.println("서비스 진입아이디 : "+member.getPassword());
 		MemberMapper mapper = sqlSession.getMapper(MemberMapper.class);
 		member = mapper.selectMember(member);
+		System.out.println("서비스 멤버 결과 : "+member.getName());
 		//String result = "로그인 실패";
 /*		if (map.containsKey(id)) {
 			result = (map.get(id)).getPassword().equals(pass) ? "로그인 성공" : "로그인 실패";
@@ -124,6 +128,12 @@ public class MemberServiceImpl implements MemberService {
 		 * map.get(i)).setUserid(member.getUserid()); }
 		 */
 		return "업데이트 성공";
+	}
+	@Override
+	public String existCheck(String userid){
+		MemberMapper mapper = sqlSession.getMapper(MemberMapper.class);
+		return mapper.selectMemberid(userid);
+		
 	}
 
 }
