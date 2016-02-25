@@ -1,13 +1,17 @@
 package com.bank.web.serviceImpl;
 
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bank.web.domain.AccountVO;
+import com.bank.web.mapper.AccountMapper;
+import com.bank.web.mapper.MemberMapper;
 import com.bank.web.service.AccountService;
 @Service
 public class AccountServiceImpl implements AccountService{
 	AccountVO account = new AccountVO();
-
+	@Autowired private SqlSession sqlSession;
 	@Override
 	public String deposit(int money) {
 		// 2. 입금
@@ -32,5 +36,13 @@ public class AccountServiceImpl implements AccountService{
 	public String search() {
 		//4.  잔액조회
 		return "잔액 : " + account.getMoney();
+	}
+
+	public AccountVO getAccount(String userid) {
+		AccountVO temp = new AccountVO();
+		AccountMapper mapper = sqlSession.getMapper(AccountMapper.class);
+		temp = mapper.selectAccount(userid);
+		
+		return temp;
 	}
 }

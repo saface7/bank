@@ -1,50 +1,67 @@
 package com.bank.web.controller;
 
-import java.util.Scanner;
 
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bank.web.service.AccountService;
-import com.bank.web.service.AdminService;
+import com.bank.web.domain.AccountVO;
+import com.bank.web.domain.MemberVO;
 import com.bank.web.serviceImpl.AccountServiceImpl;
-import com.bank.web.serviceImpl.AdminServiceImpl;
 
-import sun.print.resources.serviceui;
 @Controller
-public class AccountController {
-	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
-		AccountService service = new AccountServiceImpl();
-		AdminService admin = new AdminServiceImpl(100);
-		while (true) {
-			System.out.println("업무선택 : \n"
-										+"1. 계좌개설\n"
-					                    +"2. 입금 \n"
-					                    +"3. 출금 \n"
-					                    +"4. 잔액조회 \n"
-					                    +"5. 종료");			
-			switch (scanner.nextInt()) {
-			case 1:
-				System.out.println("이름,  비번");				
-				System.out.println(admin.open(scanner.next(), scanner.nextInt()));
-				break;
-				
-			case 2:
-				System.out.println("입금할 금액");
-				System.out.println(service.deposit(scanner.nextInt()));
-				break;
-			case 3:
-				System.out.println("출금할 금액");
-				System.out.println(service.widthdraw(scanner.nextInt()));
-				break;
-			case 4:break;
-			case 5:return;
-			
-			default:
-				System.out.println("1~5번 사이에서 선택가능합니다.");
-				System.out.println("다시 선택해 주세요");
-				break;
-			}
-		}
+@RequestMapping("/account")
+public class AccountController{
+	@Autowired AccountServiceImpl accountService;
+	//내 계좌 페이지 이동
+	@RequestMapping(value="/myAccount/{userid}", method = RequestMethod.GET)
+	public String myAccount(Model model,
+			@PathVariable("userid")String userid,
+			HttpSession session){
+		MemberVO temp = new MemberVO();
+		AccountVO acc = new AccountVO();
+		temp = (MemberVO) session.getAttribute(temp.getUserid());
+		acc = accountService.getAccount(temp.getUserid());
+		System.out.println("내 계좌정보 : "+acc.getAccountNo());
+		System.out.println("내 계좌잔액 : "+acc.getMoney());
+		System.out.println("내 계좌비번 : "+acc.getPassword());
+		
+		model.addAttribute("message", temp.getName());
+		model.addAttribute("userid", temp.getUserid());
+		model.addAttribute("account", acc);
+		return "account/myAccount";
+	}
+	//계좌 개설하기
+	@RequestMapping(value="/openAccount", method = RequestMethod.GET)
+	public String loginForm(Model model, HttpSession session){
+		
+		return "account/myAccount";
+	}
+	//입금하기
+	@RequestMapping(value="/deposit", method = RequestMethod.GET)
+	public String deposit(Model model, HttpSession session){
+	
+		return "account/myAccount";
+	}
+	//출금하기
+	@RequestMapping(value="/widthdraw", method = RequestMethod.GET)
+	public String widthdraw(Model model, HttpSession session){
+
+		return "account/myAccount";
+	}
+	//계좌해지
+	@RequestMapping(value="/remove", method = RequestMethod.GET)
+	public String remove(Model model, HttpSession session){
+		MemberVO temp = new MemberVO();
+		temp = (MemberVO) session.getAttribute("member");
+		model.addAttribute("message", temp.getName());
+		model.addAttribute("userid", temp.getUserid());
+		return "account/myAccount";
 	}
 }
